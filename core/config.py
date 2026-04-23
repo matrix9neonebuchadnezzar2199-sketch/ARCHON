@@ -38,10 +38,10 @@ ARCHON_CONFIG: dict = {
         "rakesh_jhunjhunwala",
     ],
     "selected_analysts": [
-        "fundamentals",
-        "sentiment",
-        "news",
         "market",
+        "social",
+        "news",
+        "fundamentals",
     ],
     "enable_valuation_agent": True,
     "max_invest_debate_rounds": 2,
