@@ -55,6 +55,59 @@ ARCHON integrates two open-source AI trading frameworks into a unified system wi
 | **Settings** | LLM provider, model selection, debate rounds, output language |
 | **SSE Streaming** | Real-time progress for all engine runs |
 
+## Upstream comparison (AI Hedge Fund · TradingAgents · ARCHON)
+
+The tables below place **ARCHON** alongside the two upstream open-source projects ARCHON embeds. Symbol legend: **✅** = yes / strong, **❌** = no, **△** = partial or limited.
+
+### Merits & demerits
+
+| Item | [AI Hedge Fund](https://github.com/virattt/ai-hedge-fund) | [TradingAgents](https://github.com/TauricResearch/TradingAgents) | **ARCHON** |
+| :--- | :--- | :--- | :--- |
+| **Purpose** | PoC for AI investment judgment (educational) | Research framework simulating a trading org | **Unified stack: Guru + TA + Ultimate debate + memory; education / research** |
+| **Author** | Individual (virattt) | Tauric / UCLA (research) | **This monorepo (v0.2.0+)** |
+| **Academic backing** | None | [arXiv](https://arxiv.org/abs/2412.20138) (experiments) | **No own paper; inherits TA’s research lineage indirectly** |
+| **Agent count** | Up to ~19 (gurus + analysts + risk/PM) | ~10 (analysts, bull/bear, trader, risk, PM) | **13 gurus + TA/analysts + invest/risk debate rounds (configurable)** |
+| **Investor personas** | ✅ 13 famous gurus | ❌ Role-based only | **✅ (13, toggle via settings)** |
+| **Debate mechanism** | ❌ Independent signals | ✅ Bull/Bear + risk | **✅ (`max_invest_debate_rounds` / `max_risk_debate_rounds`)** |
+| **Memory / learning** | ❌ Stateless | ✅ BM25 + reflection | **✅ (memory dir + `enable_reflection` / `enable_memory`)** |
+| **LLM two-layer** | ❌ Single model path | ✅ Deep + quick | **✅ (deep / quick / guru models)** |
+| **LLM providers** | OpenAI, Anthropic, Groq, Ollama, … | OpenAI, Google, … + OpenRouter, Ollama, … | **Many (see `pyproject.toml`; OpenAI, Anthropic, Google, Ollama, xAI, Groq, …)** |
+| **Data** | Financial Datasets API, etc. | yfinance, Alpha Vantage, … | **yfinance-centred (`data_vendors` in config)** |
+| **Backtest** | ✅ Built-in | ❌ | **✅ (`/api/backtest`, engine wrapper)** |
+| **Web UI** | ✅ Full app | ❌ CLI | **✅ React dashboard + API** |
+| **Portfolio** | ✅ Cash, margin, long/short | △ Single-ticker sim | **✅ API + config: cash, `margin_requirement`, `allow_short`** |
+| **Multi-ticker** | ✅ e.g. CSV tickers | △ One-at-a-time typical | **✅ Ultimate, backtest, etc.** |
+| **Architecture** | DAG (parallel → aggregate) | Graph + debate loops | **Fused: Ultimate + AI-HF + TA** |
+| **Design philosophy** | Diverse “votes” on style | Org-style consensus + learning | **Fuse gurus, TA, debate, and memory in one pipeline** |
+| **Code / extensibility** | Simple, easy to read | Highly modular, package-style | **Monorepo + `vendors/` submodules; large surface, extensible** |
+| **Docker** | △ Not a first-class story | ✅ `docker-compose` | **✅ `docker-compose` (backend + frontend, volumes for cache/results/memory)** |
+| **Output language** | English-centric | `output_language` | **✅ `OUTPUT_LANGUAGE` + Settings API** |
+| **Config flexibility** | Code edits | `DEFAULT_CONFIG`-style | **High: `ARCHON_CONFIG` + `/api/archon/settings` + per-provider options** |
+
+### Capabilities (feature matrix)
+
+| Capability | AI Hedge Fund | TradingAgents | **ARCHON** |
+| :--- | :--- | :--- | :--- |
+| **Fundamental analysis** | ✅ | ✅ | **✅** |
+| **Technical analysis** | ✅ | ✅ | **✅** |
+| **Sentiment** | ✅ | ✅ | **✅** |
+| **News** | △ (within sentiment) | ✅ News analyst | **✅ (e.g. `news` in `selected_analysts`)** |
+| **Valuation (DCF, etc.)** | ✅ | ❌ | **✅ (`enable_valuation_agent`)** |
+| **Famous-investor views** | ✅ 13 | ❌ | **✅** |
+| **Inter-agent debate** | ❌ | ✅ | **✅** |
+| **Reflection on past runs** | ❌ | ✅ | **✅ (`enable_reflection`)** |
+| **Portfolio-wide / multi-ticker** | ✅ | ❌ (single name typical) | **✅** |
+| **Backtest** | ✅ | ❌ | **✅** |
+| **Web dashboard** | ✅ | ❌ | **✅** |
+| **Local LLM (Ollama)** | ✅ | ✅ | **✅** |
+| **Short positions** | ✅ | △ | **✅ (`allow_short`)** |
+| **Margin** | ✅ | ❌ | **✅ (`margin_requirement`)** |
+| **Persistent trade / run logs** | △ | ✅ JSON | **✅/△ (`/api/logs` + on-disk; depth depends on engine)** |
+| **Provider-specific reasoning** | ❌ | ✅ (thinking / effort) | **✅ (e.g. `OPENAI_REASONING_EFFORT`, `ANTHROPIC_EFFORT`, `GOOGLE_THINKING_LEVEL`)** |
+
+*Automated “full feature” E2E tests are not a single `test.py` in the repo root; use `poetry run python scripts/smoke_test.py` for offline API smoke checks. LLM/POST/SSE paths need keys and manual or separate E2E.*  
+*ARCHON is not distributed as a standalone `.exe`; use **Docker Compose** or the scripts in `scripts/` (see [Quick Start](#quick-start)).*
+
 ## Quick Start
 
 ### Prerequisites
@@ -192,6 +245,59 @@ scripts\run.bat
 - **バックテスト**: エクイティカーブ、シャープレシオ、最大ドローダウン
 - **メモリ**: BM25 インデックスによるエージェント記憶の保存・検索
 - **ログ**: 全エンジン実行の JSON ログ自動保存・閲覧
+
+### 比較表（AI Hedge Fund · TradingAgents · ARCHON）
+
+**記号**: **✅** あり/強い · **❌** なし · **△** 一部
+
+#### メリット・デメリット
+
+| 比較項目 | [AI Hedge Fund](https://github.com/virattt/ai-hedge-fund) | [TradingAgents](https://github.com/TauricResearch/TradingAgents) | **ARCHON** |
+| :--- | :--- | :--- | :--- |
+| 目的 | AI投資判断のPoC（教育） | 取引現場風の研究枠 | **Guru+TA+Ultimate を統合した一貫スタック（教育・研究）** |
+| 作者 | 個人（virattt） | Tauric / UCLA 系 | **本 monorepo（v0.2.0+）** |
+| 学術的裏付け | なし | [arXiv 論文](https://arxiv.org/abs/2412.20138) 等 | **独自論文はなし（TA 系の要素を利用）** |
+| エージェント数 | 最大~19 程度 | 約10 | **Guru 13 ＋ TA/アナリスト ＋ 投資・リスク討論（可変）** |
+| 投資家ペルソナ | ✅ 13人 | ❌ 役割のみ | **✅（設定で有効/無効）** |
+| ディベート機構 | ❌ 独立シグナル | ✅ | **✅（`max_invest_debate_rounds` / `max_risk_debate_rounds`）** |
+| メモリ・学習 | ❌ | ✅ 振り返り等 | **✅（.memory 等 + `enable_memory` / `enable_reflection`）** |
+| LLM 2層 | ❌ | ✅ Deep+Quick | **✅（deep / quick / guru）** |
+| 対応LLM | 主要ベンダー複数 | 更に多め+OpenRouter等 | **多数（`pyproject.toml` 参照）** |
+| データ | Financial Datasets API 等 | yfinance 等 | **yfinance 中心** |
+| バックテスト | ✅ | ❌ | **✅** |
+| Web UI | ✅ | ❌ CLI | **✅** |
+| ポートフォリオ | ✅ 多機能 | △ 単一銘柄寄り | **✅（現金/マージン/ショート 等）** |
+| 複数銘柄 | ✅ | △ | **✅** |
+| アーキテクチャ | DAG 系 | 議論ループ | **融合（Ultimate + HF + TA）** |
+| 設計思想 | 多様な哲学の集約 | 組織的合意 | **Guru+TA+議論+メモリの一本化** |
+| 拡張性 | 素朴 | パッケージ的 | **vendor 同梱型 monorepo（依存は大きい）** |
+| Docker | △/不明 | ✅ | **✅ `docker-compose` + 永続 vol** |
+| 出力言語 | 英語中心 | 複数可 | **✅ 設定可能** |
+| 設定 | 低～コード | 高 | **高（`ARCHON_CONFIG`＋ API）** |
+
+#### できること
+
+| 機能 | AI Hedge Fund | TradingAgents | **ARCHON** |
+| :--- | :--- | :--- | :--- |
+| ファンダ | ✅ | ✅ | **✅** |
+| テクニカル | ✅ | ✅ | **✅** |
+| センチメント | ✅ | ✅ | **✅** |
+| ニュース | △ 情勢内 | ✅ 専任 | **✅** |
+| バリュエーション | ✅ | ❌ | **✅** |
+| 著名投資家視点 | ✅ | ❌ | **✅** |
+| エージェント間の議論 | ❌ | ✅ | **✅** |
+| 過去の意思決定の振り返り | ❌ | ✅ | **✅** |
+| ポートフォリオ全体 | ✅ | ❌ 単銘柄寄り | **✅** |
+| バックテスト | ✅ | ❌ | **✅** |
+| Web ダッシュボード | ✅ | ❌ | **✅** |
+| ローカル LLM (Ollama) | ✅ | ✅ | **✅** |
+| ショート | ✅ | △ | **✅** |
+| マージン | ✅ | ❌ | **✅** |
+| 取引ログ永続化 | △ | ✅ 詳細JSON | **✅/△** |
+| プロバイダ別推論制御 | ❌ | ✅ | **✅** |
+
+- ルートの網羅E2E用 `test.py` はありません。オフライン用は `poetry run python scripts/smoke_test.py` を参照。  
+- 起動は **Docker Compose** または `scripts/run.*` 等。**単体 EXE 配布は想定していません**（上記 [Quick Start](#quick-start)）。
 
 ---
 
