@@ -3,7 +3,7 @@ name = "archon"
 version = "0.1.0"
 description = "ARCHON — integrated AI trading system (monorepo)"
 authors = ["ARCHON"]
-packages = [{ include = "core" }]
+packages = [{ include = "core" }, { include = "archon_app" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -44,6 +44,10 @@ tqdm = "^4.67.0"
 typer = "^0.12.0"
 parsel = "^1.8.0"
 setuptools = ">=80.0.0"
+# AI-HF backend (imported in-process) uses these
+ollama = ">=0.3.0"
+sqlalchemy = "^2.0.0"
+alembic = "^1.12.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
