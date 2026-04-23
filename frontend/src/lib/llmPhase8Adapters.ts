@@ -1,4 +1,8 @@
-import type { LlmCandidatesData } from "@/components/settings/LlmModelSelect";
+import {
+  buildModelRows,
+  type LlmCandidatesData,
+  type RRow,
+} from "@/components/settings/LlmModelSelect";
 import type { LlmCandidate, LlmCandidatesResponse } from "@/types";
 
 /** GET /api/archon/llm/candidates (Phase 8) → 既存 `buildModelRows` 用 */
@@ -41,6 +45,30 @@ export function phase8ResponseToLegacyLlmData(r: LlmCandidatesResponse): LlmCand
         })),
     },
   };
+}
+
+/** 設定画面の接続方式に応じた `buildModelRows` 結果（pick 同期用） */
+export function buildRowsForSettingsMode(
+  phase8: LlmCandidatesResponse | null,
+  mode: "online" | "local",
+  localTool: "ollama" | "lm-studio",
+): RRow[] {
+  if (!phase8) return [];
+  const legacy = phase8ResponseToLegacyLlmData(phase8);
+  if (mode === "online") {
+    const cloudOnly: LlmCandidatesData = {
+      local: {
+        ollama: { ...legacy.local.ollama, ok: false, models: [] },
+        lm_studio: { ...legacy.local.lm_studio, ok: false, models: [] },
+      },
+      cloud: legacy.cloud,
+    };
+    return buildModelRows(cloudOnly);
+  }
+  const localOnly: LlmCandidatesData = { local: legacy.local, cloud: { models: [] } };
+  const all = buildModelRows(localOnly);
+  if (localTool === "ollama") return all.filter((r) => r.source === "ollama");
+  return all.filter((r) => r.source === "lm_studio");
 }
 
 export function countPhase8LocalModels(r: LlmCandidatesResponse | null): { o: number; l: number; c: number } {
