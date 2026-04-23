@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "archon"
-version = "0.1.0"
+version = "0.2.0"
 description = "ARCHON — integrated AI trading system (monorepo)"
 authors = ["ARCHON"]
 packages = [{ include = "core" }, { include = "archon_app" }]

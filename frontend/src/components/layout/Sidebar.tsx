@@ -70,7 +70,7 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-border px-4 py-3">
-        <p className="text-xs text-muted-foreground">ARCHON v0.1.0</p>
+        <p className="text-xs text-muted-foreground">ARCHON v0.2.0</p>
         <p className="text-xs text-muted-foreground">Educational use only</p>
       </div>
     </aside>

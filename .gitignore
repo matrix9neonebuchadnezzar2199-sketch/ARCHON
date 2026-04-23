@@ -42,3 +42,10 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Docker
+docker-compose.override.yml
+
+# Database
+*.db
+*.sqlite3

@@ -85,7 +85,7 @@ async def _lifespan(app: FastAPI):
 app = FastAPI(
     title="ARCHON — AI Trading",
     description="AI Hedge Fund + TradingAgents (integrated)",
-    version="0.1.0",
+    version="0.2.0",
     lifespan=_lifespan,
 )
 
@@ -120,10 +120,39 @@ async def archon_health():
     return {
         "status": "ok",
         "system": "ARCHON",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "engines": {
             "ai_hedge_fund": _aihf_available,
             "trading_agents": True,
             "ultimate": True,
         },
     }
+
+
+# ── Serve `frontend/dist` in production (when built; skipped for dev) ──
+_FRONTEND_DIST = _ROOT / "frontend" / "dist"
+if _FRONTEND_DIST.is_dir() and (_FRONTEND_DIST / "index.html").is_file():
+    from fastapi import HTTPException
+    from fastapi.responses import FileResponse
+    from fastapi.staticfiles import StaticFiles
+
+    _ASSETS = _FRONTEND_DIST / "assets"
+    if _ASSETS.is_dir():
+        app.mount(
+            "/assets",
+            StaticFiles(directory=str(_ASSETS)),
+            name="frontend-assets",
+        )
+
+    @app.get("/", include_in_schema=False)
+    async def _spa_root() -> FileResponse:
+        return FileResponse(str(_FRONTEND_DIST / "index.html"))
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def _spa_fallback(full_path: str) -> FileResponse:
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not found")
+        p = _FRONTEND_DIST / full_path
+        if p.is_file():
+            return FileResponse(str(p))
+        return FileResponse(str(_FRONTEND_DIST / "index.html"))
