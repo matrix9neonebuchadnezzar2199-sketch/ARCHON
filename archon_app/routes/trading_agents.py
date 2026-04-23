@@ -104,6 +104,20 @@ async def run_stream(req: TARunRequest):
                     status=f"Completed {ticker}",
                     detail=str(result.get("decision", ""))[:500],
                 ).to_sse()
+            try:
+                from archon_app.routes.memory import register_ta_engine
+
+                register_ta_engine(engine)
+            except Exception:  # noqa: BLE001
+                pass
+            try:
+                from core.logs.log_manager import LogManager
+
+                LogManager().save_run_log(
+                    "trading-agents", req.tickers, req.trade_date, results
+                )
+            except Exception:  # noqa: BLE001
+                pass
             yield CompleteEvent(engine="trading-agents", data={"results": results}).to_sse()
         except Exception as e:  # noqa: BLE001
             yield ErrorEvent(

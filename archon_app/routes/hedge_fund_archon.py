@@ -100,6 +100,14 @@ async def run_stream(req: HFRunRequest) -> StreamingResponse:
                     detail=detail,
                 ).to_sse()
 
+            try:
+                from core.logs.log_manager import LogManager
+
+                LogManager().save_run_log(
+                    "ai-hedge-fund", req.tickers, req.start_date, result
+                )
+            except Exception:  # noqa: BLE001
+                pass
             yield CompleteEvent(engine="ai-hedge-fund", data=result).to_sse()
         except Exception as e:  # noqa: BLE001
             yield ErrorEvent(

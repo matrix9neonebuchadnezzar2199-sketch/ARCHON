@@ -53,6 +53,8 @@ from archon_app.routes.ultimate import router as ultimate_router
 from archon_app.routes.hedge_fund_archon import router as hf_archon_router
 from archon_app.routes.backtest import router as backtest_router
 from archon_app.routes.portfolio import router as portfolio_router
+from archon_app.routes.memory import router as memory_router
+from archon_app.routes.logs import router as archon_logs_router
 from archon_app.routes.settings import router as archon_settings_router
 
 
@@ -108,6 +110,8 @@ app.include_router(ultimate_router)
 app.include_router(hf_archon_router)
 app.include_router(backtest_router)
 app.include_router(portfolio_router)
+app.include_router(memory_router)
+app.include_router(archon_logs_router)
 app.include_router(archon_settings_router)
 
 

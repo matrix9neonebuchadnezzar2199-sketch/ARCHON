@@ -149,6 +149,14 @@ async def run_stream(req: UltimateRunRequest) -> StreamingResponse:
                     status=item["status"],
                 ).to_sse()
 
+            try:
+                from core.logs.log_manager import LogManager
+
+                LogManager().save_run_log(
+                    "ultimate", req.tickers, req.trade_date, result
+                )
+            except Exception:  # noqa: BLE001
+                pass
             yield CompleteEvent(engine="ultimate", data=result).to_sse()
         except Exception as e:  # noqa: BLE001
             yield ErrorEvent(

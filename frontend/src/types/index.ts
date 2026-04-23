@@ -227,3 +227,40 @@ export interface PortfolioSummary {
   positions: PortfolioPosition[];
   engine_results: Record<string, string>;
 }
+
+// Memory (TradingAgents BM25)
+
+export interface MemoryEntry {
+  situation: string;
+  recommendation: string;
+}
+
+export interface MemoryStats {
+  disk: Record<string, number>;
+  live: Record<string, number>;
+  total_disk: number;
+  total_live: number;
+  memory_dir: string;
+}
+
+export interface MemoryQueryMatch {
+  matched_situation: string;
+  recommendation: string;
+  similarity_score: number;
+}
+
+// Logs (TA files + archon run JSON)
+
+export interface LogEntry {
+  id: string;
+  engine: string;
+  ticker: string;
+  date: string;
+  file_path: string;
+  size_bytes: number;
+}
+
+export interface LogDetail extends LogEntry {
+  content: unknown;
+  error?: string;
+}
