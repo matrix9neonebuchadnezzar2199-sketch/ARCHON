@@ -14,7 +14,7 @@ export function TickerInput({ value, onChange, className, ...rest }: TickerInput
       className={cn("w-64", className)}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder="AAPL, MSFT, NVDA"
+      placeholder="例: AAPL, MSFT, NVDA"
       {...rest}
     />
   );

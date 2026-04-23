@@ -6,15 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchJSON, postJSON } from "@/lib/api";
+import { PageDoc } from "@/components/shared/PageDoc";
+import { getPageHelp } from "@/docs/pageHelps";
 import { Brain, Search, Save, Download, Trash2, RefreshCw } from "lucide-react";
 import type { MemoryEntry, MemoryStats, MemoryQueryMatch } from "@/types";
 
 const MEMORY_NAMES = [
-  { key: "bull_memory", label: "Bull", color: "text-green-400" },
-  { key: "bear_memory", label: "Bear", color: "text-red-400" },
-  { key: "trader_memory", label: "Trader", color: "text-blue-400" },
-  { key: "invest_judge_memory", label: "Invest Judge", color: "text-purple-400" },
-  { key: "portfolio_manager_memory", label: "Portfolio Mgr", color: "text-yellow-400" },
+  { key: "bull_memory", label: "強気", color: "text-green-400" },
+  { key: "bear_memory", label: "弱気", color: "text-red-400" },
+  { key: "trader_memory", label: "トレーダー", color: "text-blue-400" },
+  { key: "invest_judge_memory", label: "投資審査", color: "text-purple-400" },
+  { key: "portfolio_manager_memory", label: "PM", color: "text-yellow-400" },
 ];
 
 export default function MemoryPage() {
@@ -98,31 +100,33 @@ export default function MemoryPage() {
         <div>
           <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
             <Brain className="h-8 w-8 text-archon-500" />
-            Memory
+            メモリ
           </h1>
           <p className="mt-1 text-muted-foreground">
-            TradingAgents BM25 memory — {totalEntries} total entries.
+            TradingAgents の BM25 メモリ。全 {totalEntries} 件。
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={loadMemories} disabled={loading}>
             <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-            Refresh
+            更新
           </Button>
           <Button variant="outline" size="sm" onClick={handleSave}>
             <Save className="mr-2 h-4 w-4" />
-            Save to Disk
+            ディスクに保存
           </Button>
           <Button variant="outline" size="sm" onClick={handleLoad}>
             <Download className="mr-2 h-4 w-4" />
-            Load from Disk
+            ディスクから読込
           </Button>
           <Button variant="outline" size="sm" onClick={() => void handleClear()}>
             <Trash2 className="mr-2 h-4 w-4" />
-            Clear All
+            全削除
           </Button>
         </div>
       </div>
+
+      <PageDoc markdown={getPageHelp("/memory")} title="この画面の説明（Markdown）" />
 
       {stats && (
         <div className="grid gap-3 grid-cols-2 md:grid-cols-5">
@@ -132,10 +136,10 @@ export default function MemoryPage() {
                 <p className={`text-xs font-medium ${m.color}`}>{m.label}</p>
                 <div className="flex justify-between mt-1">
                   <span className="text-xs text-muted-foreground">
-                    Live: {stats.live[m.key] ?? 0}
+                    稼働: {stats.live[m.key] ?? 0}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    Disk: {stats.disk[m.key] ?? 0}
+                    保存: {stats.disk[m.key] ?? 0}
                   </span>
                 </div>
               </CardContent>
@@ -146,20 +150,20 @@ export default function MemoryPage() {
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Query Memory (BM25)</CardTitle>
+          <CardTitle className="text-sm">メモリを検索（BM25）</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex flex-wrap items-end gap-3">
             <div className="space-y-1.5 flex-1 min-w-[200px]">
-              <label className="text-xs font-medium text-muted-foreground">Situation</label>
+              <label className="text-xs font-medium text-muted-foreground">状況</label>
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Describe a market situation..."
+                placeholder="市場状況を記述…"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Memory</label>
+              <label className="text-xs font-medium text-muted-foreground">メモリ種別</label>
               <select
                 value={selectedMemory}
                 onChange={(e) => setSelectedMemory(e.target.value)}
@@ -178,7 +182,7 @@ export default function MemoryPage() {
               className="bg-archon-500 hover:bg-archon-600"
             >
               <Search className="mr-2 h-4 w-4" />
-              Search
+              検索
             </Button>
           </div>
 
@@ -190,16 +194,16 @@ export default function MemoryPage() {
                 <div key={i} className="rounded-md border border-border p-3 space-y-1">
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs">
-                      Score: {(m.similarity_score * 100).toFixed(0)}%
+                      スコア: {(m.similarity_score * 100).toFixed(0)}%
                     </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    <span className="font-medium text-foreground">Situation:</span>{" "}
+                    <span className="font-medium text-foreground">状況:</span>{" "}
                     {m.matched_situation.slice(0, 300)}
                     {m.matched_situation.length > 300 ? "…" : ""}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    <span className="font-medium text-archon-400">Recommendation:</span>{" "}
+                    <span className="font-medium text-archon-400">推奨:</span>{" "}
                     {m.recommendation.slice(0, 300)}
                     {m.recommendation.length > 300 ? "…" : ""}
                   </p>
@@ -212,7 +216,7 @@ export default function MemoryPage() {
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Memory Contents</CardTitle>
+          <CardTitle className="text-sm">メモリの内容</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="bull_memory">
@@ -229,7 +233,7 @@ export default function MemoryPage() {
                 <TabsContent key={m.key} value={m.key}>
                   {entries.length === 0 ? (
                     <p className="py-8 text-center text-xs text-muted-foreground">
-                      No entries. Run an analysis with TradingAgents to populate.
+                      まだエントリがありません。トレーディングエージェントで分析を実行してください。
                     </p>
                   ) : (
                     <ScrollArea className="max-h-80">
@@ -237,10 +241,10 @@ export default function MemoryPage() {
                         {entries.map((e, i) => (
                           <div key={i} className="rounded-md border border-border p-2 text-xs">
                             <p className="text-muted-foreground line-clamp-2">
-                              <span className="font-medium text-foreground">S:</span> {e.situation}
+                              <span className="font-medium text-foreground">状:</span> {e.situation}
                             </p>
                             <p className="text-muted-foreground line-clamp-2 mt-1">
-                              <span className={`font-medium ${m.color}`}>R:</span> {e.recommendation}
+                              <span className={`font-medium ${m.color}`}>推:</span> {e.recommendation}
                             </p>
                           </div>
                         ))}

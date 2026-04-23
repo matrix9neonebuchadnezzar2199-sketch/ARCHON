@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchJSON } from "@/lib/api";
+import { PageDoc } from "@/components/shared/PageDoc";
+import { getPageHelp } from "@/docs/pageHelps";
 import { FileText, RefreshCw, Trash2, ChevronRight, X } from "lucide-react";
 import type { LogEntry, LogDetail } from "@/types";
 
@@ -72,17 +74,19 @@ export default function LogsPage() {
         <div>
           <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
             <FileText className="h-8 w-8 text-archon-500" />
-            Logs
+            ログ
           </h1>
           <p className="mt-1 text-muted-foreground">
-            {totalCount} run log{totalCount !== 1 ? "s" : ""} across all engines.
+            全エンジン合計 {totalCount} 件の実行ログ。
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => void loadLogs()} disabled={loading}>
           <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
+          更新
         </Button>
       </div>
+
+      <PageDoc markdown={getPageHelp("/logs")} title="この画面の説明（Markdown）" />
 
       <div className="flex flex-wrap gap-2">
         <Badge
@@ -90,7 +94,7 @@ export default function LogsPage() {
           className="cursor-pointer text-xs"
           onClick={() => setFilter(null)}
         >
-          All ({totalCount})
+          すべて ({totalCount})
         </Badge>
         {Object.entries(counts).map(([eng, cnt]) => (
           <Badge
@@ -109,12 +113,12 @@ export default function LogsPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Log Files</CardTitle>
+            <CardTitle className="text-sm">ログ一覧</CardTitle>
           </CardHeader>
           <CardContent>
             {logs.length === 0 ? (
               <p className="py-8 text-center text-xs text-muted-foreground">
-                No logs yet. Run an analysis to generate logs.
+                ログはまだありません。分析を実行すると保存されます。
               </p>
             ) : (
               <ScrollArea className="max-h-[500px]">
@@ -157,7 +161,7 @@ export default function LogsPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center justify-between text-sm">
-              <span>Log Detail</span>
+              <span>詳細</span>
               {selectedLog && (
                 <div className="flex gap-1">
                   <Button
@@ -167,7 +171,7 @@ export default function LogsPage() {
                     onClick={() => void handleDelete(selectedLog.id)}
                   >
                     <Trash2 className="h-3 w-3 mr-1" />
-                    Delete
+                    削除
                   </Button>
                   <Button
                     variant="ghost"
@@ -210,7 +214,7 @@ export default function LogsPage() {
               </ScrollArea>
             ) : (
               <p className="py-16 text-center text-xs text-muted-foreground">
-                Select a log from the list to view details.
+                左の一覧からログを選択してください。
               </p>
             )}
           </CardContent>

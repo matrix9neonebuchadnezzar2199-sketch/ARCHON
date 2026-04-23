@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SSEProgress } from "@/components/shared/SSEProgress";
 import { useSSE } from "@/hooks/use-sse";
 import { fetchJSON } from "@/lib/api";
+import { PageDoc } from "@/components/shared/PageDoc";
+import { getPageHelp } from "@/docs/pageHelps";
 import { Bot, Play, RotateCcw } from "lucide-react";
 import type { Analyst } from "@/types";
 
@@ -69,33 +71,34 @@ export default function TradingAgentsPage() {
       <div>
         <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
           <Bot className="h-8 w-8 text-archon-500" />
-          Trading Agents
+          トレーディングエージェント
         </h1>
         <p className="mt-1 text-muted-foreground">
-          Multi-agent flow: analyst reports, investment debate, risk, and a final
-          decision.
+          アナリストのレポート、投資討議、リスク、最終判断まで一連の流れ。
         </p>
       </div>
+
+      <PageDoc markdown={getPageHelp("/trading-agents")} title="この画面の説明（Markdown）" />
 
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-wrap items-end gap-4">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground">
-                Tickers (comma separated)
+                銘柄（カンマ区切り）
               </label>
               <Input
                 value={tickers}
                 onChange={(e) => {
                   setTickers(e.target.value);
                 }}
-                placeholder="AAPL, MSFT, NVDA"
+                placeholder="例: AAPL, MSFT, NVDA"
                 className="w-64"
                 disabled={isRunning}
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Trade date</label>
+              <label className="text-xs font-medium text-muted-foreground">取引日</label>
               <Input
                 type="date"
                 value={tradeDate}
@@ -112,12 +115,12 @@ export default function TradingAgentsPage() {
               className="bg-archon-500 hover:bg-archon-600"
             >
               <Play className="mr-2 h-4 w-4" />
-              {isRunning ? "Running…" : "Run analysis"}
+              {isRunning ? "実行中…" : "分析を実行"}
             </Button>
             {(result ?? error) && (
               <Button type="button" variant="outline" onClick={reset}>
                 <RotateCcw className="mr-2 h-4 w-4" />
-                Reset
+                リセット
               </Button>
             )}
           </div>
@@ -135,14 +138,14 @@ export default function TradingAgentsPage() {
 
       {error && (
         <Card className="border-red-500/30">
-          <CardContent className="pt-6 text-sm text-red-400">Error: {error}</CardContent>
+          <CardContent className="pt-6 text-sm text-red-400">エラー: {error}</CardContent>
         </Card>
       )}
 
       {byTicker && firstTicker && (
         <Card>
           <CardHeader>
-            <CardTitle>Analysis results</CardTitle>
+            <CardTitle>分析結果</CardTitle>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue={firstTicker} className="w-full">
@@ -162,7 +165,7 @@ export default function TradingAgentsPage() {
                   <TabsContent key={ticker} value={ticker} className="space-y-4">
                     <Card>
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-sm">Final decision</CardTitle>
+                        <CardTitle className="text-sm">最終判断</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <pre className="whitespace-pre-wrap text-sm text-foreground">
@@ -175,7 +178,7 @@ export default function TradingAgentsPage() {
                     {data.reports && (
                       <Card>
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-sm">Analyst reports</CardTitle>
+                          <CardTitle className="text-sm">アナリストレポート</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <ReportTabs reports={data.reports} idPrefix={ticker} />
@@ -185,7 +188,7 @@ export default function TradingAgentsPage() {
                     {data.debate?.invest != null && (
                       <Card>
                         <CardHeader className="pb-2">
-                          <CardTitle className="text-sm">Investment debate</CardTitle>
+                          <CardTitle className="text-sm">投資討議</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <pre className="max-h-48 overflow-y-auto text-xs whitespace-pre-wrap">

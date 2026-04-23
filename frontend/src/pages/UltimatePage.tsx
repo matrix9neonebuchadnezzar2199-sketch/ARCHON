@@ -11,6 +11,8 @@ import { GuruVoteBar } from "@/components/shared/GuruVoteBar";
 import { SignalBadge } from "@/components/shared/SignalBadge";
 import { useSSE } from "@/hooks/use-sse";
 import { fetchJSON } from "@/lib/api";
+import { PageDoc } from "@/components/shared/PageDoc";
+import { getPageHelp } from "@/docs/pageHelps";
 import { Zap, Play, RotateCcw, Users, MessageSquare } from "lucide-react";
 import type { Guru, Analyst, TickerFusion, Signal } from "@/types";
 
@@ -60,30 +62,32 @@ export default function UltimatePage() {
       <div>
         <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
           <Zap className="h-8 w-8 text-archon-500" />
-          Ultimate Mode
+          Ultimate モード
         </h1>
         <p className="mt-1 text-muted-foreground">
-          13 Guru investors + TradingAgents debate → fused verdict per ticker.
+          13 名の Guru と TradingAgents の討議を融合し、銘柄ごとに判定。
         </p>
       </div>
+
+      <PageDoc markdown={getPageHelp("/ultimate")} title="この画面の説明（Markdown）" />
 
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-wrap items-end gap-4">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground">
-                Tickers (comma separated)
+                銘柄（カンマ区切り）
               </label>
               <Input
                 value={tickers}
                 onChange={(e) => setTickers(e.target.value)}
-                placeholder="AAPL, MSFT, NVDA"
+                placeholder="例: AAPL, MSFT, NVDA"
                 className="w-64"
                 disabled={isRunning}
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Trade date</label>
+              <label className="text-xs font-medium text-muted-foreground">取引日</label>
               <Input
                 type="date"
                 value={tradeDate}
@@ -98,12 +102,12 @@ export default function UltimatePage() {
               className="bg-archon-500 hover:bg-archon-600"
             >
               <Play className="mr-2 h-4 w-4" />
-              {isRunning ? "Running…" : "Run Ultimate"}
+              {isRunning ? "実行中…" : "Ultimate を実行"}
             </Button>
             {(result ?? error) && (
               <Button variant="outline" onClick={reset}>
                 <RotateCcw className="mr-2 h-4 w-4" />
-                Reset
+                リセット
               </Button>
             )}
           </div>
@@ -111,7 +115,7 @@ export default function UltimatePage() {
           <div className="mt-4 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <Users className="h-4 w-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground mr-1">Gurus:</span>
+              <span className="text-xs text-muted-foreground mr-1">Guru:</span>
               {gurus.map((g) => (
                 <Badge key={g.key} variant="outline" className="text-xs capitalize">
                   {g.display_name}
@@ -120,7 +124,7 @@ export default function UltimatePage() {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground mr-1">Analysts:</span>
+              <span className="text-xs text-muted-foreground mr-1">アナリスト:</span>
               {analysts.map((a) => (
                 <Badge key={a.key} variant="outline" className="text-xs">
                   {a.name}
@@ -135,7 +139,7 @@ export default function UltimatePage() {
 
       {error && (
         <Card className="border-red-500/30">
-          <CardContent className="pt-6 text-sm text-red-400">Error: {error}</CardContent>
+          <CardContent className="pt-6 text-sm text-red-400">エラー: {error}</CardContent>
         </Card>
       )}
 
@@ -158,7 +162,7 @@ export default function UltimatePage() {
 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Guru Vote Distribution</CardTitle>
+                    <CardTitle className="text-sm">Guru 投票の内訳</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <GuruVoteBar
@@ -172,7 +176,7 @@ export default function UltimatePage() {
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm">
-                      Guru Signals ({f.guru_bull_count + f.guru_bear_count + f.guru_neutral_count})
+                      Guru シグナル（{f.guru_bull_count + f.guru_bear_count + f.guru_neutral_count} 件）
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -208,7 +212,7 @@ export default function UltimatePage() {
 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">TradingAgents Decision</CardTitle>
+                    <CardTitle className="text-sm">TradingAgents の判断</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <pre className="whitespace-pre-wrap text-sm text-foreground">
@@ -222,7 +226,7 @@ export default function UltimatePage() {
                 {f.ta_reports && Object.keys(f.ta_reports).length > 0 && (
                   <Card>
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">Analyst Reports</CardTitle>
+                      <CardTitle className="text-sm">アナリストレポート</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <Tabs defaultValue={Object.keys(f.ta_reports)[0]}>
@@ -248,13 +252,13 @@ export default function UltimatePage() {
                 {f.ta_debate && (
                   <Card>
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">Debate</CardTitle>
+                      <CardTitle className="text-sm">討議</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <Tabs defaultValue="invest">
                         <TabsList>
-                          <TabsTrigger value="invest" className="text-xs">Investment</TabsTrigger>
-                          <TabsTrigger value="risk" className="text-xs">Risk</TabsTrigger>
+                          <TabsTrigger value="invest" className="text-xs">投資</TabsTrigger>
+                          <TabsTrigger value="risk" className="text-xs">リスク</TabsTrigger>
                         </TabsList>
                         <TabsContent value="invest">
                           <pre className="max-h-48 overflow-y-auto text-xs whitespace-pre-wrap">

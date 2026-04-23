@@ -18,6 +18,8 @@ ARCHON_CONFIG: dict = {
     "deep_think_llm": os.getenv("DEEP_THINK_MODEL", "gpt-4.1"),
     "quick_think_llm": os.getenv("QUICK_THINK_MODEL", "gpt-4.1-mini"),
     "guru_llm": os.getenv("GURU_MODEL", "gpt-4.1"),
+    "ollama_base_url": os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434"),
+    "openai_base_url": os.getenv("OPENAI_BASE_URL", ""),  # LM Studio 等の OpenAI 互換
     "anthropic_effort": os.getenv("ANTHROPIC_EFFORT", None),
     "openai_reasoning_effort": os.getenv("OPENAI_REASONING_EFFORT", None),
     "google_thinking_level": os.getenv("GOOGLE_THINKING_LEVEL", None),

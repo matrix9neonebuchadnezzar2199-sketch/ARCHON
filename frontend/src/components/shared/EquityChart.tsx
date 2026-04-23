@@ -62,7 +62,7 @@ export function EquityChart({ data, initialCapital }: Props) {
             const n = typeof value === "number" ? value : Number(value);
             return [
               `$${n.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
-              "Portfolio",
+              "ポートフォリオ",
             ];
           }}
         />

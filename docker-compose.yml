@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
     container_name: archon-frontend
     ports:
-      - "${FRONTEND_PORT:-3000}:80"
+      - "${FRONTEND_PORT:-3501}:80"
     depends_on:
       - backend
     restart: unless-stopped

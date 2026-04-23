@@ -13,9 +13,9 @@ export function GuruVoteBar({ bullish, bearish, neutral }: Props) {
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-xs text-muted-foreground">
-        <span className="text-green-400">{bullish} Bullish</span>
-        <span className="text-yellow-400">{neutral} Neutral</span>
-        <span className="text-red-400">{bearish} Bearish</span>
+        <span className="text-green-400">{bullish} 強気</span>
+        <span className="text-yellow-400">{neutral} 中立</span>
+        <span className="text-red-400">{bearish} 弱気</span>
       </div>
       <div className="flex h-3 w-full overflow-hidden rounded-full bg-slate-800">
         {bullPct > 0 && (

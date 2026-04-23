@@ -14,18 +14,18 @@ import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 const NAV_ITEMS = [
-  { label: "Dashboard", icon: LayoutDashboard, path: "/" },
+  { label: "ダッシュボード", icon: LayoutDashboard, path: "/" },
   "divider",
-  { label: "Ultimate Mode", icon: Zap, path: "/ultimate" },
+  { label: "Ultimate モード", icon: Zap, path: "/ultimate" },
   { label: "AI Hedge Fund", icon: Landmark, path: "/hedge-fund" },
-  { label: "Trading Agents", icon: Bot, path: "/trading-agents" },
+  { label: "トレーディングエージェント", icon: Bot, path: "/trading-agents" },
   "divider",
-  { label: "Backtest", icon: TrendingUp, path: "/backtest" },
-  { label: "Portfolio", icon: Briefcase, path: "/portfolio" },
+  { label: "バックテスト", icon: TrendingUp, path: "/backtest" },
+  { label: "ポートフォリオ", icon: Briefcase, path: "/portfolio" },
   "divider",
-  { label: "Memory", icon: Brain, path: "/memory" },
-  { label: "Logs", icon: FileText, path: "/logs" },
-  { label: "Settings", icon: Settings, path: "/settings" },
+  { label: "メモリ", icon: Brain, path: "/memory" },
+  { label: "ログ", icon: FileText, path: "/logs" },
+  { label: "設定", icon: Settings, path: "/settings" },
 ] as const;
 
 export function Sidebar() {
@@ -71,7 +71,7 @@ export function Sidebar() {
 
       <div className="border-t border-border px-4 py-3">
         <p className="text-xs text-muted-foreground">ARCHON v0.2.0</p>
-        <p className="text-xs text-muted-foreground">Educational use only</p>
+        <p className="text-xs text-muted-foreground">教育・研究向け</p>
       </div>
     </aside>
   );

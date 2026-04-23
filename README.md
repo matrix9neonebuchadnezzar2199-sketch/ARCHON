@@ -164,7 +164,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Open <http://localhost:3000> (Docker UI via nginx) or <http://localhost:5173> (local dev with Vite). API is on port **8000**; Docker maps `FRONTEND_PORT` (default **3000**) to the frontend container and `BACKEND_PORT` (default **8000**) to the backend.
+Open <http://localhost:3501> (Docker UI via nginx, see `FRONTEND_PORT` in `.env`) or <http://localhost:5173> (local dev with Vite). API is on port **8000**; Docker maps `FRONTEND_PORT` (default **3501**) to the frontend container and `BACKEND_PORT` (default **8000**) to the backend.
 
 ### Run (single port — production static)
 

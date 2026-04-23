@@ -19,6 +19,10 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from core.config import ARCHON_CONFIG
+from core.llm_key_status import env_name_for_provider, is_api_key_configured_for_provider
+from core.ui_secrets import load_ui_secrets_to_environ
+
 _ROOT = Path(__file__).resolve().parent.parent
 _AIHF = _ROOT / "vendors" / "ai-hedge-fund"
 _TA = _ROOT / "vendors" / "TradingAgents"
@@ -28,6 +32,7 @@ for p in (str(_ROOT), str(_TA), str(_AIHF)):
         sys.path.insert(0, p)
 
 load_dotenv(_ROOT / ".env")
+load_ui_secrets_to_environ()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("archon")
@@ -56,6 +61,7 @@ from archon_app.routes.portfolio import router as portfolio_router
 from archon_app.routes.memory import router as memory_router
 from archon_app.routes.logs import router as archon_logs_router
 from archon_app.routes.settings import router as archon_settings_router
+from archon_app.routes.llm_candidates import router as llm_candidates_router
 
 
 @asynccontextmanager
@@ -94,8 +100,10 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
+        "http://localhost:3501",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:3501",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -113,10 +121,13 @@ app.include_router(portfolio_router)
 app.include_router(memory_router)
 app.include_router(archon_logs_router)
 app.include_router(archon_settings_router)
+app.include_router(llm_candidates_router)
 
 
 @app.get("/api/archon/health")
 async def archon_health():
+    _prov = str(ARCHON_CONFIG.get("llm_provider", "openai") or "openai")
+    _key_env = env_name_for_provider(_prov)
     return {
         "status": "ok",
         "system": "ARCHON",
@@ -125,6 +136,11 @@ async def archon_health():
             "ai_hedge_fund": _aihf_available,
             "trading_agents": True,
             "ultimate": True,
+        },
+        "llm": {
+            "provider": _prov,
+            "api_key_configured": is_api_key_configured_for_provider(_prov),
+            "expected_api_key_env": _key_env,
         },
     }
 

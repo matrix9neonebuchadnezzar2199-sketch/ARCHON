@@ -23,7 +23,7 @@ export function SSEProgress({ events, isRunning }: Props) {
         ))}
         {isRunning && (
           <div className="flex items-center gap-2 text-archon-500">
-            <span className="animate-pulse">{"\u25cf"}</span> Running…
+            <span className="animate-pulse">{"\u25cf"}</span> 実行中…
           </div>
         )}
       </div>

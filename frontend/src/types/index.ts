@@ -43,6 +43,12 @@ export interface HealthResponse {
     trading_agents: boolean;
     ultimate: boolean;
   };
+  /** Present from API v0.2.0+ */
+  llm?: {
+    provider: string;
+    api_key_configured: boolean;
+    expected_api_key_env: string | null;
+  };
 }
 
 export interface Analyst {
@@ -263,4 +269,49 @@ export interface LogEntry {
 export interface LogDetail extends LogEntry {
   content: unknown;
   error?: string;
+}
+
+// —— Phase 8: LLM candidates, connection test, audit
+
+export interface LlmCandidate {
+  id: string;
+  display_name: string;
+  provider: string;
+  source: "local" | "cloud";
+  parameter_size?: string | null;
+  quantization?: string | null;
+}
+
+export interface LlmCandidatesResponse {
+  candidates: LlmCandidate[];
+  ollama_detected: boolean;
+  ollama_base_url?: string | null;
+  ollama_port?: number | null;
+  ollama_error?: string | null;
+  lm_studio_detected: boolean;
+  lm_studio_base_url?: string | null;
+  lm_studio_port?: number | null;
+  lm_studio_openai_v1_url?: string | null;
+  lm_studio_error?: string | null;
+  cloud_providers: string[];
+}
+
+export interface ConnectionTestResult {
+  provider: string;
+  reachable: boolean;
+  latency_ms?: number | null;
+  error?: string | null;
+  model_count?: number | null;
+}
+
+export interface AuditEntryV8 {
+  ts: string;
+  action: string;
+  detail: Record<string, unknown>;
+}
+
+export interface ConfigExportV8 {
+  config: Record<string, unknown>;
+  exported_at: string;
+  version?: string;
 }

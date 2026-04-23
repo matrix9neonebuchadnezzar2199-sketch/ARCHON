@@ -9,6 +9,8 @@ import { SSEProgress } from "@/components/shared/SSEProgress";
 import { SignalBadge } from "@/components/shared/SignalBadge";
 import { useSSE } from "@/hooks/use-sse";
 import { fetchJSON } from "@/lib/api";
+import { PageDoc } from "@/components/shared/PageDoc";
+import { getPageHelp } from "@/docs/pageHelps";
 import { Landmark, Play, RotateCcw } from "lucide-react";
 import type { Signal } from "@/types";
 
@@ -91,25 +93,27 @@ export default function HedgeFundPage() {
           AI Hedge Fund
         </h1>
         <p className="mt-1 text-muted-foreground">
-          13 famous investor personas + functional analysts analyzing stocks in parallel.
+          13 名の投資家ペルソナと機能系アナリストが並行して銘柄を分析。
         </p>
       </div>
+
+      <PageDoc markdown={getPageHelp("/hedge-fund")} title="この画面の説明（Markdown）" />
 
       <Card>
         <CardContent className="pt-6 space-y-4">
           <div className="flex flex-wrap items-end gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Tickers</label>
+              <label className="text-xs font-medium text-muted-foreground">銘柄</label>
               <Input
                 value={tickers}
                 onChange={(e) => setTickers(e.target.value)}
-                placeholder="AAPL, MSFT"
+                placeholder="例: AAPL, MSFT"
                 className="w-64"
                 disabled={isRunning}
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Start date</label>
+              <label className="text-xs font-medium text-muted-foreground">開始日</label>
               <Input
                 type="date"
                 value={startDate}
@@ -119,7 +123,7 @@ export default function HedgeFundPage() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">End date</label>
+              <label className="text-xs font-medium text-muted-foreground">終了日</label>
               <Input
                 type="date"
                 value={endDate}
@@ -134,19 +138,19 @@ export default function HedgeFundPage() {
               className="bg-archon-500 hover:bg-archon-600"
             >
               <Play className="mr-2 h-4 w-4" />
-              {isRunning ? "Running…" : "Run Hedge Fund"}
+              {isRunning ? "実行中…" : "Hedge Fund を実行"}
             </Button>
             {(result ?? error) && (
               <Button variant="outline" onClick={reset}>
                 <RotateCcw className="mr-2 h-4 w-4" />
-                Reset
+                リセット
               </Button>
             )}
           </div>
 
           <div>
             <p className="text-xs font-medium text-muted-foreground mb-2">
-              Analysts ({selectedAnalysts.length}/{allAnalysts.length} selected)
+              アナリスト（選択 {selectedAnalysts.length} / 全 {allAnalysts.length}）
             </p>
             <div className="flex flex-wrap gap-1.5">
               {allAnalysts.map((a) => {
@@ -175,14 +179,14 @@ export default function HedgeFundPage() {
 
       {error && (
         <Card className="border-red-500/30">
-          <CardContent className="pt-6 text-sm text-red-400">Error: {error}</CardContent>
+          <CardContent className="pt-6 text-sm text-red-400">エラー: {error}</CardContent>
         </Card>
       )}
 
       {decisions != null && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Portfolio Decisions</CardTitle>
+            <CardTitle className="text-sm">ポートフォリオの判断</CardTitle>
           </CardHeader>
           <CardContent>
             <pre className="whitespace-pre-wrap text-sm text-foreground">
@@ -196,7 +200,7 @@ export default function HedgeFundPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">
-              Analyst Signals ({Object.keys(analystSignals).length} analysts)
+              アナリストシグナル（{Object.keys(analystSignals).length} 名）
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -264,7 +268,7 @@ function SignalRow({ data }: { data: Record<string, unknown> }) {
       <SignalBadge signal={validSignal} />
       <div className="flex-1 min-w-0">
         <span className="text-xs text-muted-foreground">
-          Confidence: {Math.round(conf * 100)}%
+          信頼度: {Math.round(conf * 100)}%
         </span>
         <p className="text-xs text-muted-foreground mt-0.5 line-clamp-3">{reasoning}</p>
       </div>

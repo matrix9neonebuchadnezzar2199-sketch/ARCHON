@@ -20,7 +20,9 @@ RUN poetry config virtualenvs.create false && \
 COPY core/ core/
 COPY archon_app/ archon_app/
 COPY serve.py ./
-COPY .env.example .env
+# Do not bake `.env` into the image: empty `OPENAI_API_KEY=` in a file can win over
+# missing env when using python-dotenv. Real keys must come from `docker compose` `env_file` / `-e`.
+# (`.env` on the host is injected at run time, not from the image layer.)
 
 # Submodules — init on host before build
 COPY vendors/ vendors/

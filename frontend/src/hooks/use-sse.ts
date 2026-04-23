@@ -13,6 +13,20 @@ function parseSSEData(data: Record<string, unknown>): SSEEvent | null {
   return data as unknown as SSEEvent;
 }
 
+/** LLM/HTTP の英語を UI 向け日本語に寄せる（中身の JSON はそのまま示さない想定） */
+function humanizeLlmErrorMessage(message: string): string {
+  const m = message.toLowerCase();
+  if (
+    m.includes("401") ||
+    m.includes("authentication") ||
+    m.includes("bearer") ||
+    m.includes("api key")
+  ) {
+    return "API キーが未設定、またはプロバイダと一致しません。リポジトリ直下の .env を確認し、必要なら docker compose 再ビルド、または 設定 → LLM プロバイダ / Ollama 利用を見直してください。";
+  }
+  return message;
+}
+
 interface UseSSEReturn {
   isRunning: boolean;
   progress: SSEProgressEvent[];
@@ -81,7 +95,7 @@ export function useSSE(): UseSSEReturn {
               }
               case "error": {
                 const e = ev as SSEErrorEvent;
-                setError(e.message);
+                setError(humanizeLlmErrorMessage(e.message));
                 setIsRunning(false);
                 break;
               }
@@ -93,7 +107,7 @@ export function useSSE(): UseSSEReturn {
             if (myRun !== runId.current) {
               return;
             }
-            setError(err.message);
+            setError(humanizeLlmErrorMessage(err.message));
             setIsRunning(false);
           },
         );
@@ -102,7 +116,8 @@ export function useSSE(): UseSSEReturn {
         }
       } catch (err: unknown) {
         if (myRun === runId.current) {
-          setError(err instanceof Error ? err.message : String(err));
+          const msg = err instanceof Error ? err.message : String(err);
+          setError(humanizeLlmErrorMessage(msg));
           setIsRunning(false);
         }
       }
