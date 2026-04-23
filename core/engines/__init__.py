@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__all__ = ["HedgeFundEngine", "TradingAgentsEngine", "UltimateEngine"]
+__all__ = ["ArchonBacktestEngine", "HedgeFundEngine", "TradingAgentsEngine", "UltimateEngine"]
 
 
 def __getattr__(name: str):
@@ -16,5 +16,9 @@ def __getattr__(name: str):
         from core.engines.ultimate_engine import UltimateEngine
 
         return UltimateEngine
+    if name == "ArchonBacktestEngine":
+        from core.engines.backtest_engine import ArchonBacktestEngine
+
+        return ArchonBacktestEngine
     msg = f"module {__name__!r} has no attribute {name!r}"
     raise AttributeError(msg)

@@ -164,3 +164,66 @@ export interface HFResult {
   engine: string;
   mode: string;
 }
+
+// Backtest
+
+export interface BacktestRunRequest {
+  tickers: string[];
+  start_date: string;
+  end_date: string;
+  initial_capital?: number;
+  model_name?: string;
+  model_provider?: string;
+  selected_analysts?: string[];
+  margin_requirement?: number;
+}
+
+export interface BacktestPortfolioValue {
+  date: string;
+  value: number;
+  long_exposure?: number;
+  short_exposure?: number;
+  gross_exposure?: number;
+  net_exposure?: number;
+  long_short_ratio?: number;
+}
+
+export interface BacktestPerformanceMetrics {
+  sharpe_ratio?: number | null;
+  sortino_ratio?: number | null;
+  max_drawdown?: number | null;
+  max_drawdown_date?: string | null;
+  long_short_ratio?: number | null;
+  gross_exposure?: number | null;
+  net_exposure?: number | null;
+}
+
+export interface BacktestResult {
+  performance_metrics: BacktestPerformanceMetrics;
+  portfolio_values: BacktestPortfolioValue[];
+  total_days: number;
+  initial_capital: number;
+  final_value: number;
+  total_return_pct: number;
+}
+
+// Portfolio
+
+export interface PortfolioPosition {
+  ticker: string;
+  long_shares: number;
+  short_shares: number;
+  cost_basis: number;
+  current_price: number;
+  market_value: number;
+  unrealized_pnl: number;
+  weight_pct: number;
+}
+
+export interface PortfolioSummary {
+  last_updated: string | null;
+  cash: number;
+  total_value: number;
+  positions: PortfolioPosition[];
+  engine_results: Record<string, string>;
+}
