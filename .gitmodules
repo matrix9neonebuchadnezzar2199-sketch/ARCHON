@@ -1,0 +1,6 @@
+[submodule "vendors/ai-hedge-fund"]
+	path = vendors/ai-hedge-fund
+	url = https://github.com/virattt/ai-hedge-fund.git
+[submodule "vendors/TradingAgents"]
+	path = vendors/TradingAgents
+	url = https://github.com/TauricResearch/TradingAgents.git

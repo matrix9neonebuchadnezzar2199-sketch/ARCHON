@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "archon"
+version = "0.1.0"
+description = "ARCHON — integrated AI trading system (monorepo)"
+authors = ["ARCHON"]
+packages = [{ include = "core" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# Stack aligned with vendored projects; pin ranges may be tightened after integration tests
+langchain = "^0.3.7"
+langgraph = "^0.4.8"
+langchain-openai = "^0.3.23"
+langchain-anthropic = "^0.3.15"
+langchain-google-genai = "^2.0.11"
+fastapi = { version = "^0.104.0", extras = ["standard"] }
+uvicorn = { version = "^0.30.0", extras = ["standard"] }
+pydantic = "^2.4.2"
+yfinance = "^0.2.63"
+colorama = "^0.4.6"
+python-dotenv = "^1.0.0"
+questionary = "^2.1.0"
+httpx = "^0.27.0"
+numpy = "^1.24.0"
+pandas = "^2.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+ruff = "^0.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
