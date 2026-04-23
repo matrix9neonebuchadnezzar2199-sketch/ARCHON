@@ -50,6 +50,7 @@ except Exception as e:  # noqa: BLE001
 
 from archon_app.routes.trading_agents import router as ta_router
 from archon_app.routes.ultimate import router as ultimate_router
+from archon_app.routes.hedge_fund_archon import router as hf_archon_router
 from archon_app.routes.settings import router as archon_settings_router
 
 
@@ -102,6 +103,7 @@ if _aihf_available and api_router is not None:
 
 app.include_router(ta_router)
 app.include_router(ultimate_router)
+app.include_router(hf_archon_router)
 app.include_router(archon_settings_router)
 
 
